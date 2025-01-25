@@ -16,10 +16,10 @@ class JoinPath(str):
     
 root = JoinPath(os.path.dirname(__file__)) @ '..'
         
-def compile_and_run_cpp(filename: str):
+def compile_and_run_cpp(filename: str, onetestcase: bool = False):
     project_dir = root @ filename
     if not os.path.exists(project_dir): 
-        create_new_project(filename)
+        create_new_project(filename, onetestcase = onetestcase)
     
     cpp_file = project_dir @ "main.cpp"
     exe_file = project_dir @ "main.exe"
@@ -48,7 +48,7 @@ def compile_and_run_cpp(filename: str):
         print(f"Error occurred during compilation or execution: {e}")
         
         
-def create_new_project(project_name: str):
+def create_new_project(project_name: str, onetestcase: bool = False):
     # Define directories and file paths for the new project structure
     project_dir = root @ project_name
     if os.path.exists(project_dir):
@@ -65,7 +65,7 @@ def create_new_project(project_name: str):
     out_file = project_dir @ ".out.txt"
 
     # C++ template code
-    with open(root @ 'public/.template.cpp', 'r') as f: 
+    with open(root @ f'public/.template{".onetestcase" if onetestcase else ""}.cpp', 'r') as f: 
         cpp_code = f.read()
 
     # Create the files
@@ -73,7 +73,7 @@ def create_new_project(project_name: str):
         f.write(cpp_code)
     
     with open(in_file, "w") as f:
-        f.write("input data here")
+        f.write("1")
     
     with open(out_file, "w") as f:
         f.write("expected output here")
@@ -110,4 +110,5 @@ if __name__ == "__main__":
     with open(root @ 'tfcpp.file', 'r') as f: 
         filename = f.read().replace('\n', '').strip()
     assert filename != '', "tfcpp.file is empty"
-    compile_and_run_cpp(filename)
+    onetestcase = filename.startswith('cses')
+    compile_and_run_cpp(filename, onetestcase=onetestcase)
