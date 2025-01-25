@@ -25,15 +25,14 @@ using namespace std;
 
 // Debugging utilities
 #ifdef DEBUG
-    #ifdef FMTASSERTPATH
-        #include FMTASSERTPATH
-    #else
-        #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-    #endif
-    #ifdef FMTDISPLAYPATH
-        #include FMTDISPLAYPATH // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
+    #ifdef FMTDISPLAYPATH_BASE 
+        #define STR(s) #s
+        #define XSTR(s) STR(s)
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+        #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
     #else
         #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
+        #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
     #endif
 #else
     #define debug(...)

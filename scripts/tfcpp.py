@@ -27,12 +27,11 @@ def compile_and_run_cpp(filename: str, onetestcase: bool = False):
     prefix = '/'.join('..' for _ in project_dir.to_list()[len(root.to_list()):])
     
     # Define the paths for FMT headers and the compile command
-    FMTASSERTPATH = f"{prefix}/fmt/extra.test.assert.h"
-    FMTDISPLAYPATH = f"{prefix}/fmt/display.h"
+    FMTDISPLAYPATH_BASE = f"{prefix}/fmt"
 
     # Command to compile the C++ file using g++
     compile_command = [
-        "g++", "-std=c++17", f'-DFMTASSERTPATH="{FMTASSERTPATH}"', f'-DFMTDISPLAYPATH="{FMTDISPLAYPATH}"', "-DDEBUG", cpp_file, "-o", exe_file
+        "g++", "-std=c++17", f'-DFMTDISPLAYPATH_BASE={FMTDISPLAYPATH_BASE}', "-DDEBUG", cpp_file, "-o", exe_file
     ]
 
     try:

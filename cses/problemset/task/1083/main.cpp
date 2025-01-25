@@ -30,9 +30,11 @@ using namespace std;
         #define XSTR(s) STR(s)
         #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+        #include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
     #else
         #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
+        #include "fmt/extra.array.h"
     #endif
 #else
     #define debug(...)
@@ -62,8 +64,20 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    // int input(n, m, k); 
-    // int inputn(arr, n);
+    int input(n); 
+    int inputn(arr, n);
+    bool arr_index[n] = {false};
+    for (int i = 0; i < n-1; i++){
+        arr_index[arr[i] - 1] = true;
+    }
+    debug(fmt::sprint_array(arr_index, n));
+    for (int i = 0; i < n; i++){
+        if(arr_index[i] == false) {
+            cout<<i+1<<nl;
+            return;
+        }
+    }    
+    cout<<"SOMETHING WENT WRONG"<<nl;
 }
 
 int main(){
@@ -88,17 +102,9 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(add small numbers){
-        tin.set("3 4");
+        tin.set("5\n2 3 1 5");
         solver();
-        asserttout("7\n");
-    }
-    It(add larger numbers){
-        tin.set("99", "99");
-        solver();
-        asserttout("198\n");
-    }
-    { // please use It(){} or call tout.clear() at first in this block 
-
+        asserttout("4\n");
     }
 }
 #endif
