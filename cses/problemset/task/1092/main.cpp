@@ -149,12 +149,22 @@ MAKE_TESTS{
     It(8){
         tin.set("8");
         solver();
-        asserttout("YES\n4\n1 4 5 8 \n4\n2 3 6 7 \n");
+        asserttout(
+            "YES", 
+            "4",
+            "1 4 5 8 ",
+            "4",
+            "2 3 6 7 \n");
     }
     It(4){
         tin.set("4");
         solver();
-        asserttout("YES\n2\n1 4 \n2\n2 3 \n");
+        asserttout(
+            "YES",
+            "2",
+            "1 4 ",
+            "2",
+            "2 3 \n");
     }
 }
 #endif
