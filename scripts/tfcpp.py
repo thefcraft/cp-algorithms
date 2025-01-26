@@ -3,6 +3,7 @@ import os
 import shutil
 import argparse
 from typing import List
+import json
 
 class JoinPath(str):
     def to_list(self) -> List[str]:
@@ -104,10 +105,14 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    if not os.path.exists(root @ 'tfcpp.file'): 
-        with open(root @ 'tfcpp.file', 'a'): ...
-    with open(root @ 'tfcpp.file', 'r') as f: 
-        filename = f.read().replace('\n', '').strip()
-    assert filename != '', "tfcpp.file is empty"
-    onetestcase = filename.startswith('cses')
+    if not os.path.exists(root @ 'tfcpp.json'): 
+        with open(root @ 'tfcpp.json', 'w') as f: json.dump({
+                                                                "project_name": "cses/problemset/task/1069",
+                                                                "single_test_case": False
+                                                            }, f, indent='\t ')
+    with open(root @ 'tfcpp.json', 'r') as f: 
+        data = json.load(f)
+    filename = data.get("project_name")
+    onetestcase = data.get("single_test_case")
+    assert filename is not None and onetestcase is not None, "tfcpp.json file is corrupted"
     compile_and_run_cpp(filename, onetestcase=onetestcase)
