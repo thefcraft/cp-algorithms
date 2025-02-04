@@ -1,4 +1,9 @@
 {
 	"project_name": "cses/problemset/task/1069",
-	"single_test_case": true
+	"single_test_case": true,
+	"fmt_imports": [
+		"display.h",
+		"extra.test.assert.h"
+	],
+	"io_files": true
 }

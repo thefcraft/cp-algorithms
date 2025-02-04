@@ -28,11 +28,13 @@ using namespace std;
     #ifdef FMTDISPLAYPATH_BASE 
         #define STR(s) #s
         #define XSTR(s) STR(s)
-        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
-        #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+        // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+        // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+        {%tftoken%{import_fmt_xstr}%tftoken%}
     #else
-        #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
-        #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
+        // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
+        // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
+        {%tftoken%{import_fmt}%tftoken%}
     #endif
 #else
     #define debug(...)
@@ -70,15 +72,20 @@ int main(){
     #ifdef DEBUG
         fmt::println(ansi::red, "Debugging information: Program running in debug mode.", ansi::reset);
         RUN_TESTS;
-        freopen(".in.txt", "r", stdin); // read from .in.txt
-        freopen(".out.txt", "w", stdout); // write to .out.txt
+        // freopen(".in.txt", "r", stdin); // read from .in.txt
+        // freopen(".out.txt", "w", stdout); // write to .out.txt
+        {%tftoken%{io_files}%tftoken%}
     #endif
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    solver();
+    // unsigned int t;
+    // cin >> t;
+    // while (t--) solver();
+    {%tftoken%{runner}%tftoken%}
+    return 0;
 }
 
 // sort(a, a+n, greater<int>());
@@ -87,18 +94,10 @@ int main(){
 #ifdef DEBUG
 MAKE_TESTS{
     // you can use this if you want...
-    It(add small numbers){
+    It(sample test case){
         tin.set("3 4");
         solver();
         asserttout("7\n");
-    }
-    It(add larger numbers){
-        tin.set("99", "99");
-        solver();
-        asserttout("198\n");
-    }
-    { // please use It(){} or call tout.clear() at first in this block 
-
     }
 }
 #endif
