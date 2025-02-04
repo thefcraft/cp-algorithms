@@ -33,7 +33,7 @@ def decodeMeta(metaEncode: str)->Tuple[bool, List[str]]:
     meta = json.loads(meta)    
     return meta['single_test_case'], meta['fmt_imports'], meta['io_files']
 
-def compile_and_run_cpp(filename: str, fmt_imports: List[str], onetestcase: bool = False, io_files: bool = False):
+def compile_and_run_cpp(filename: str, fmt_imports: List[str], onetestcase: bool = False, io_files: bool = False, update_on_json_changes: bool = False):
     project_dir = root @ filename
     
     cpp_file = project_dir @ "main.cpp"
@@ -55,7 +55,7 @@ def compile_and_run_cpp(filename: str, fmt_imports: List[str], onetestcase: bool
             # with open(cpp_file, "w") as f:
             #     f.write(newmeta + data)
     
-    if metaChanged: 
+    if metaChanged and update_on_json_changes: 
         print('Warning!!! File meta is Changed...')
         update_project(filename, oldmeta, fmt_imports=fmt_imports, onetestcase=onetestcase, io_files=io_files)
     
@@ -221,7 +221,9 @@ if __name__ == "__main__":
                                                                 "fmt_imports": [
 		                                                            "display.h",
 	                                                            	"extra.test.assert.h"
-	                                                            ]
+	                                                            ],
+	                                                            "io_files": False,
+	                                                            "update_on_json_changes": False
                                                             }, f, indent='\t ')
     with open(root @ 'tfcpp.json', 'r') as f: 
         data = json.load(f)
@@ -229,5 +231,6 @@ if __name__ == "__main__":
     onetestcase = data.get("single_test_case", False)
     fmt_imports = data.get("fmt_imports", ["display.h", "extra.test.assert.h"])
     io_files = data.get("io_files", False)
+    update_on_json_changes = data.get("update_on_json_changes", False)
     assert filename is not None and onetestcase is not None, "tfcpp.json file is corrupted"
-    compile_and_run_cpp(filename, onetestcase=onetestcase, fmt_imports=fmt_imports, io_files=io_files)
+    compile_and_run_cpp(filename, onetestcase=onetestcase, fmt_imports=fmt_imports, io_files=io_files, update_on_json_changes=update_on_json_changes)

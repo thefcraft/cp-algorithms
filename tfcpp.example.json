@@ -5,5 +5,6 @@
 		"display.h",
 		"extra.test.assert.h"
 	],
-	"io_files": true
+	"io_files": true,
+	"update_on_json_changes": false
 }
