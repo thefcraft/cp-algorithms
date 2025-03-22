@@ -12,7 +12,7 @@
         static std::string test_name = "";
         static int test_name_count_old = 0;
         static int test_name_count = 0;
-
+        static std::stringstream last_tin_input_buffer;
         
         std::string replace_new_line(const std::string& str) {
             std::string result = str;  // Copy the original string to a modifiable variable
@@ -93,6 +93,7 @@
                 }
                 template<typename... Args>
                 void set(const Args&... args) {
+                    ((last_tin_input_buffer << args << '\n'), ...);
                     ((buffer << args << '\n'), ...);
                     // init();
                 }
@@ -128,6 +129,8 @@
                 void clear() {
                     buffer.str("");
                     buffer.clear();
+                    last_tin_input_buffer.str("");
+                    last_tin_input_buffer.clear();
                     // destroy();
                 }
 
@@ -158,6 +161,7 @@
                         
                         // Show line-by-line or character-by-character comparison:
                         show_git_diff(x, y);
+                        fmt::println(ansi::yellow, "\t\t\tfailed on input: ", last_tin_input_buffer.rdbuf(), ansi::reset);
                     } 
                     
                     this->init();
