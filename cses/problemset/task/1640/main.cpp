@@ -1,3 +1,4 @@
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIiwgInBhaXIuaCJdLCAiaW9fZmlsZXMiOiBmYWxzZX0=
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -7,7 +8,7 @@
 
 
 #include <iostream>
-// #include <algorithm>
+#include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -30,11 +31,17 @@ using namespace std;
         #define XSTR(s) STR(s)
         // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
-        {%tftoken%{import_fmt_xstr}%tftoken%}
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/pair.h)
     #else
         // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-        {%tftoken%{import_fmt}%tftoken%}
+        #include "fmt/display.h"
+		#include "fmt/extra.test.assert.h"
+		#include "fmt/extra.array.h"
+		#include "fmt/pair.h"
     #endif
 #else
     #define debug(...)
@@ -87,8 +94,32 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    // int input(n, m, k); 
-    // int inputn(arr, n);
+    int input(n, x); 
+    pair<int, int> arr[n];
+    for (int i = 0; i < n; i++){
+        int num;
+        cin>>num;
+        arr[i] = {i, num};
+    }
+
+    sort(arr, arr+n, [](const pair<int, int>& a, const pair<int, int>& b) {
+        return a.second < b.second;  // Compare based on the second element (index)
+    });
+
+    debug(fmt::sprint_array(arr, n));
+    int ptr1 = 0, ptr2 = n-1;
+    while (ptr1 < ptr2){
+        if (arr[ptr1].second + arr[ptr2].second < x) ptr1++;
+        else if (arr[ptr1].second + arr[ptr2].second > x) ptr2--;
+        else {
+            if (arr[ptr1].first < arr[ptr2].first)
+                cout<<arr[ptr1].first+1<<' '<<arr[ptr2].first+1<<nl;
+            else
+                cout<<arr[ptr2].first+1<<' '<<arr[ptr1].first+1<<nl;
+            return;
+        }
+    }
+    cout<<"IMPOSSIBLE"<<nl;
 }
 
 int main(){
@@ -97,7 +128,7 @@ int main(){
         RUN_TESTS;
         // freopen(".in.txt", "r", stdin); // read from .in.txt
         // freopen(".out.txt", "w", stdout); // write to .out.txt
-        {%tftoken%{io_files}%tftoken%}
+        return 0;
     #endif
 
     ios::sync_with_stdio(false);
@@ -107,7 +138,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    {%tftoken%{runner}%tftoken%}
+    solver();
     return 0;
 }
 
@@ -118,9 +149,9 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("3 4");
+        tin.set("4 8", "2 7 5 1");
         solver();
-        asserttout("7\n");
+        asserttout("2 4\n");
     }
 }
 #endif

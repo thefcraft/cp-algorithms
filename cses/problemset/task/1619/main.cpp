@@ -1,3 +1,4 @@
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIl0sICJpb19maWxlcyI6IGZhbHNlfQ==
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -7,7 +8,7 @@
 
 
 #include <iostream>
-// #include <algorithm>
+#include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -30,11 +31,15 @@ using namespace std;
         #define XSTR(s) STR(s)
         // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
-        {%tftoken%{import_fmt_xstr}%tftoken%}
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
     #else
         // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-        {%tftoken%{import_fmt}%tftoken%}
+        #include "fmt/display.h"
+		#include "fmt/extra.test.assert.h"
+		#include "fmt/extra.array.h"
     #endif
 #else
     #define debug(...)
@@ -87,8 +92,32 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    // int input(n, m, k); 
-    // int inputn(arr, n);
+    int input(n); 
+    ll arr_in[n];
+    ll arr_out[n];
+    for (int i = 0; i < n; i++) cin >> arr_in[i] >> arr_out[i];
+    sort(arr_in, arr_in+n);
+    sort(arr_out, arr_out+n);
+    debug(fmt::sprint_array(arr_in, n));
+    debug(fmt::sprint_array(arr_out, n));
+    int ptr1 = 0;
+    int ptr2 = 0;
+    int ans = 0;
+    int max_ans = 0;
+    while (ptr1 < n){
+        if (arr_in[ptr1] < arr_out[ptr2]){
+            ptr1++;
+            ans++;
+            if (ans > max_ans) max_ans = ans; // NOTE: we have to take max value...
+        }else if (arr_in[ptr1] > arr_out[ptr2]){
+            ptr2++;
+            ans--;
+        }else{ // both are equal
+            ptr1++;
+            ptr2++;
+        }
+    }
+    cout<<max_ans<<nl;
 }
 
 int main(){
@@ -97,7 +126,7 @@ int main(){
         RUN_TESTS;
         // freopen(".in.txt", "r", stdin); // read from .in.txt
         // freopen(".out.txt", "w", stdout); // write to .out.txt
-        {%tftoken%{io_files}%tftoken%}
+        return 0;
     #endif
 
     ios::sync_with_stdio(false);
@@ -107,7 +136,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    {%tftoken%{runner}%tftoken%}
+    solver();
     return 0;
 }
 
@@ -118,9 +147,33 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("3 4");
+        tin.set("3",
+                "5 8",
+                "2 4", 
+                "3 9");
         solver();
-        asserttout("7\n");
+        asserttout("2\n");
+    }
+    It(failed){
+        tin.set("4",
+            "1 10",
+            "2 4", 
+            "3 5",
+            "7 9");
+        solver();
+        asserttout("3\n");
+    }
+    It(failed){
+        tin.set("7",
+            "38311 74428",
+            "64415 68934",
+            "33635 81952",
+            "34262 91424",
+            "91682 93855",
+            "30655 39895",
+            "50402 90261");
+        solver();
+        asserttout("5\n");
     }
 }
 #endif

@@ -1,3 +1,4 @@
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIl0sICJpb19maWxlcyI6IGZhbHNlfQ==
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -7,7 +8,7 @@
 
 
 #include <iostream>
-// #include <algorithm>
+#include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -30,11 +31,15 @@ using namespace std;
         #define XSTR(s) STR(s)
         // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
-        {%tftoken%{import_fmt_xstr}%tftoken%}
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
     #else
         // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-        {%tftoken%{import_fmt}%tftoken%}
+        #include "fmt/display.h"
+		#include "fmt/extra.test.assert.h"
+		#include "fmt/extra.array.h"
     #endif
 #else
     #define debug(...)
@@ -87,8 +92,16 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    // int input(n, m, k); 
-    // int inputn(arr, n);
+    int input(n); 
+    ll inputn(P, n);
+    // ll avg = P[0]; // NOTE: we take avg in case of min((x - P[i])**2) but here it is min(|x - P[i]|) (from math formula, dc/dx where c is cost);
+    // and in this case we want that half values are +ve and half are -ve, |x-P[i]| and that x is answer
+    sort(P, P+n);
+    int m = n / 2;
+    ull cost = 0;
+    for (int i = 0; i < n; i++) cost += utils::abs(P[m] - P[i]);
+    debug(P[m]);
+    cout<<cost<<nl;
 }
 
 int main(){
@@ -97,7 +110,7 @@ int main(){
         RUN_TESTS;
         // freopen(".in.txt", "r", stdin); // read from .in.txt
         // freopen(".out.txt", "w", stdout); // write to .out.txt
-        {%tftoken%{io_files}%tftoken%}
+        return 0;
     #endif
 
     ios::sync_with_stdio(false);
@@ -107,7 +120,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    {%tftoken%{runner}%tftoken%}
+    solver();
     return 0;
 }
 
@@ -118,9 +131,44 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("3 4");
+        tin.set("5", "2 3 1 5 2");
         solver();
-        asserttout("7\n");
+        asserttout("5\n");
+    }
+    It(edge case){
+        tin.set("1", "2");
+        solver();
+        asserttout("0\n");
+    }
+    It(edge case){
+        tin.set("2", "2 2");
+        solver();
+        asserttout("0\n");
+    }
+    It(edge case){
+        tin.set("2", "2 1");
+        solver();
+        asserttout("1\n");
+    }
+    It(edge case){
+        tin.set("3", "2 1 2");
+        solver();
+        asserttout("1\n");
+    }
+    It(failed){
+        tin.set("5", "1 4 5 100 100");
+        solver();
+        asserttout("195\n");
+    }
+    It(){
+        tin.set("5", "1 3 5 10 10");
+        solver();
+        asserttout("16\n");
+    }
+    It(){
+        tin.set("4", "1 2 5 10");
+        solver();
+        asserttout("12\n");
     }
 }
 #endif

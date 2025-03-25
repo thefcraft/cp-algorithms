@@ -1,3 +1,4 @@
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIl0sICJpb19maWxlcyI6IGZhbHNlfQ==
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -30,11 +31,15 @@ using namespace std;
         #define XSTR(s) STR(s)
         // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
-        {%tftoken%{import_fmt_xstr}%tftoken%}
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
     #else
         // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-        {%tftoken%{import_fmt}%tftoken%}
+        #include "fmt/display.h"
+		#include "fmt/extra.test.assert.h"
+		#include "fmt/extra.array.h"
     #endif
 #else
     #define debug(...)
@@ -48,29 +53,6 @@ const char nl = '\n';
 // utility functions
 namespace utils{
     // define according to your use cases
-    
-    // Swaps two values
-    template <typename T>
-    void swap(T& a, T& b) {
-        T temp = a;
-        a = b;
-        b = temp;
-    }
-    // Returns the minimum of two values
-    template <typename T>
-    inline T min(T a, T b) {
-        return (a < b) ? a : b;
-    }
-    // Returns the maximum of two values
-    template <typename T>
-    inline T max(T a, T b) {
-        return (a > b) ? a : b;
-    }
-    // Returns the absolute value of a number
-    template <typename T>
-    inline T abs(T a) {
-        return (a < 0) ? -a : a;
-    }
 }
 
 typedef unsigned char uchar;
@@ -84,11 +66,23 @@ template<typename... Args>
 inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same code in O2, and codeforces compile it on O2 so don't worry; you can check my it by, g++ -O2 -S -o t1.s t1.cpp 
 #define input(...) __VA_ARGS__; _input(__VA_ARGS__)
 #define inputn(x, n) x[n]; for (size_t i = 0; i < n; i++) cin >> x[i]
-
+bool isPrime(ull n){    
+    if (n<2) return false;
+    else if (n!=2 && n%2==0) return false;
+    for (ull i = 3; i*i <= n; i+=2) if (n%i==0) return false;
+    return true;
+}
 // TODO: JUST CODE HERE
 void solver(){
-    // int input(n, m, k); 
-    // int inputn(arr, n);
+    string input(str); 
+    ll ans = 0;
+    for (const char &c: str){
+        if (c >= 'a' && c <= 'z') ans += (c + 'A' - 'a');
+        else ans -= (c - 'A' + 'a');
+        
+    }
+    debug(isPrime(0));
+    cout<<(isPrime(ans>0?ans:-ans)?1:0)<<nl;
 }
 
 int main(){
@@ -97,7 +91,7 @@ int main(){
         RUN_TESTS;
         // freopen(".in.txt", "r", stdin); // read from .in.txt
         // freopen(".out.txt", "w", stdout); // write to .out.txt
-        {%tftoken%{io_files}%tftoken%}
+        return 0;
     #endif
 
     ios::sync_with_stdio(false);
@@ -107,7 +101,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    {%tftoken%{runner}%tftoken%}
+    solver();
     return 0;
 }
 
@@ -118,9 +112,14 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("3 4");
+        tin.set("lBaXps");
         solver();
-        asserttout("7\n");
+        asserttout("0\n");
+    }
+    It(failed){
+        tin.set("qEFKmpdnUjPkjwDFrSmBugasVGwwbblESpBUSGMzDmhEtrLAEcmMgkdHTCqyqlDzLuSP");
+        solver();
+        asserttout("1\n");
     }
 }
 #endif

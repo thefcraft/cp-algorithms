@@ -227,7 +227,7 @@ if __name__ == "__main__":
                                                             }, f, indent='\t ')
     with open(root @ 'tfcpp.json', 'r') as f: 
         data = json.load(f)
-    filename = data.get("project_name")
+    filename = data.get("project_name").removesuffix('/')
     onetestcase = data.get("single_test_case", False)
     fmt_imports = data.get("fmt_imports", ["display.h", "extra.test.assert.h"])
     io_files = data.get("io_files", False)

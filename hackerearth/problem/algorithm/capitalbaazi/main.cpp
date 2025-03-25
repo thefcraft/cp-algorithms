@@ -1,3 +1,4 @@
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIl0sICJpb19maWxlcyI6IGZhbHNlfQ==
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -30,11 +31,15 @@ using namespace std;
         #define XSTR(s) STR(s)
         // #include XSTR(FMTDISPLAYPATH_BASE/display.h)
         // #include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
-        {%tftoken%{import_fmt_xstr}%tftoken%}
+        #include XSTR(FMTDISPLAYPATH_BASE/display.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.test.assert.h)
+		#include XSTR(FMTDISPLAYPATH_BASE/extra.array.h)
     #else
         // #include "fmt/display.h" // https://github.com/thefcraft/fmt-display-cpp/tree/main/fmt
         // #include "fmt/extra.test.assert.h" // https://github.com/thefcraft/fmt-display-cpp/blob/main/test.assert.h
-        {%tftoken%{import_fmt}%tftoken%}
+        #include "fmt/display.h"
+		#include "fmt/extra.test.assert.h"
+		#include "fmt/extra.array.h"
     #endif
 #else
     #define debug(...)
@@ -48,29 +53,6 @@ const char nl = '\n';
 // utility functions
 namespace utils{
     // define according to your use cases
-    
-    // Swaps two values
-    template <typename T>
-    void swap(T& a, T& b) {
-        T temp = a;
-        a = b;
-        b = temp;
-    }
-    // Returns the minimum of two values
-    template <typename T>
-    inline T min(T a, T b) {
-        return (a < b) ? a : b;
-    }
-    // Returns the maximum of two values
-    template <typename T>
-    inline T max(T a, T b) {
-        return (a > b) ? a : b;
-    }
-    // Returns the absolute value of a number
-    template <typename T>
-    inline T abs(T a) {
-        return (a < 0) ? -a : a;
-    }
 }
 
 typedef unsigned char uchar;
@@ -89,6 +71,13 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 void solver(){
     // int input(n, m, k); 
     // int inputn(arr, n);
+    string str;
+    getline(cin, str);
+    for (const char &c: str){
+        if (c == ' ') cout<<nl;
+        else 
+            cout<<char(c+('A'-'a'));
+    }
 }
 
 int main(){
@@ -97,7 +86,7 @@ int main(){
         RUN_TESTS;
         // freopen(".in.txt", "r", stdin); // read from .in.txt
         // freopen(".out.txt", "w", stdout); // write to .out.txt
-        {%tftoken%{io_files}%tftoken%}
+        return 0;
     #endif
 
     ios::sync_with_stdio(false);
@@ -107,7 +96,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    {%tftoken%{runner}%tftoken%}
+    solver();
     return 0;
 }
 
@@ -118,9 +107,9 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("3 4");
+        tin.set("subscribe to the luv channel");
         solver();
-        asserttout("7\n");
+        asserttout("SUBSCRIBE\nTO\nTHE\nLUV\nCHANNEL");
     }
 }
 #endif
