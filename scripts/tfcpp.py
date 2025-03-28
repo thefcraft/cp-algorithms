@@ -213,6 +213,16 @@ def main():
         print("Invalid command. Use 'run' or 'new'.")
 
 if __name__ == "__main__":
+    from urllib.parse import urlsplit
+    def url_to_filepath(url: str) -> str:
+        parsed_url = urlsplit(url)
+        host = parsed_url.hostname.removeprefix('www.') if parsed_url.hostname else ''
+        pos = host.find('.')
+        if pos != -1: host = host[:pos] # Only keep the main part of the domain
+        path = parsed_url.path
+        path = f"{host}{path}".replace('\\', '/')
+        return path.removesuffix('/')
+    
     # main()
     if not os.path.exists(root @ 'tfcpp.json'): 
         with open(root @ 'tfcpp.json', 'w') as f: json.dump({
@@ -227,7 +237,7 @@ if __name__ == "__main__":
                                                             }, f, indent='\t ')
     with open(root @ 'tfcpp.json', 'r') as f: 
         data = json.load(f)
-    filename = data.get("project_name").removesuffix('/')
+    filename = url_to_filepath(data.get("project_name"))
     onetestcase = data.get("single_test_case", False)
     fmt_imports = data.get("fmt_imports", ["display.h", "extra.test.assert.h"])
     io_files = data.get("io_files", False)
