@@ -225,7 +225,9 @@
     #define debug(x) std::cerr << "Debugging information: " << #x << " = " << fmt::print.sprint(x) << std::endl
     #define MAKE_TESTS void test::testsFn()
     #define RUN_TESTS test::_tin.init(); test::_tout.init(); test::testsFn(); test::_tin.clear(); test::_tout.clear(); test::_tin.destroy(); test::_tout.destroy(); test::print_tests();
-    #define It(...) test::test_name_count++; test::test_name = #__VA_ARGS__; test::_tout.clear(); if(true)
+    #define It(...) test::test_name_count++; test::test_name = #__VA_ARGS__; test::_tin.clear(); test::_tout.clear(); if(true)
     #define tout test::_tout
     #define tin test::_tin
+    #define gettout test::replace_new_line(test::_tout.get())
+    #define gettin test::last_tin_input_buffer.str()
 #endif
