@@ -1,4 +1,4 @@
-// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogdHJ1ZSwgImZtdF9pbXBvcnRzIjogWyJkaXNwbGF5LmgiLCAiZXh0cmEudGVzdC5hc3NlcnQuaCIsICJleHRyYS5hcnJheS5oIiwgInBhaXIuaCJdLCAiaW9fZmlsZXMiOiBmYWxzZX0=
+// @ignore tfmeta: eyJzaW5nbGVfdGVzdF9jYXNlIjogZmFsc2UsICJmbXRfaW1wb3J0cyI6IFsiZGlzcGxheS5oIiwgImV4dHJhLnRlc3QuYXNzZXJ0LmgiLCAiZXh0cmEuYXJyYXkuaCIsICJwYWlyLmgiXSwgImlvX2ZpbGVzIjogZmFsc2V9
 // author: [Laksh Kumar Sisodiya](https://github.com/thefcraft)
 // please run `git clone https://github.com/thefcraft/fmt-display-cpp.git`
 // and then copy pase `test.assert.h` file and `fmt` dir to the current folder
@@ -8,7 +8,7 @@
 
 
 #include <iostream>
-#include <algorithm>
+// #include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -94,22 +94,9 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    int input(n); 
-    pair<int, int> arr[n];
-    for (int i = 0; i < n; i++){
-        int num;
-        cin>>num;
-        arr[i] = {num, i};
-    }
-    sort(arr, arr+n); // NOTE: we can skip the sort as it is given that the num is between 1 to n so we can place arr[num-1] = {num, i} kindoff
-    debug(fmt::sprint_array(arr, n));
-    int last_pos = arr[0].second;
-    int ans = 1;
-    for (int i = 1; i < n; i++){
-        if (arr[i].second < last_pos) ans++;
-        last_pos = arr[i].second;
-    }
-    cout<<ans<<nl;
+    ull input(n); 
+    // int inputn(arr, n);
+    cout<<2*n<<nl;
 }
 
 int main(){
@@ -128,7 +115,7 @@ int main(){
     // unsigned int t;
     // cin >> t;
     // while (t--) solver();
-    solver();
+    unsigned int input(t); while (t--) solver();
     return 0;
 }
 
@@ -139,14 +126,14 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("5", "4 2 1 5 3");
+        tin.set("1");
         solver();
-        asserttout("3\n");
+        asserttout("2\n");
     }
-    It(the question is not what i think){ // NOTE: question askes to collect from left to right but i did right to left
-        tin.set("5", "5 4 2 3 1");
+    It(sample test case){
+        tin.set("3");
         solver();
-        asserttout("4\n");
+        asserttout("6\n");
     }
 }
 #endif

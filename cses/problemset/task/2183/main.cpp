@@ -95,21 +95,16 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 // TODO: JUST CODE HERE
 void solver(){
     int input(n); 
-    pair<int, int> arr[n];
-    for (int i = 0; i < n; i++){
-        int num;
-        cin>>num;
-        arr[i] = {num, i};
-    }
-    sort(arr, arr+n); // NOTE: we can skip the sort as it is given that the num is between 1 to n so we can place arr[num-1] = {num, i} kindoff
+    int inputn(arr, n);
+    sort(arr, arr+n);
     debug(fmt::sprint_array(arr, n));
-    int last_pos = arr[0].second;
-    int ans = 1;
-    for (int i = 1; i < n; i++){
-        if (arr[i].second < last_pos) ans++;
-        last_pos = arr[i].second;
+
+    ull current_sum = 0;
+    for (int i = 0; i < n; i++){
+        if (current_sum+1 < arr[i]) break;
+        current_sum += arr[i];
     }
-    cout<<ans<<nl;
+    cout<<current_sum+1<<nl;
 }
 
 int main(){
@@ -139,14 +134,19 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("5", "4 2 1 5 3");
+        tin.set("5", "2 9 1 2 7");
         solver();
-        asserttout("3\n");
+        asserttout("6\n");
     }
-    It(the question is not what i think){ // NOTE: question askes to collect from left to right but i did right to left
-        tin.set("5", "5 4 2 3 1");
+    It(sample test case){
+        tin.set("5", "1 2 4 8 16");
         solver();
-        asserttout("4\n");
+        asserttout("32\n");
+    }
+    It(sample test case){
+        tin.set("1", "2");
+        solver();
+        asserttout("1\n");
     }
 }
 #endif

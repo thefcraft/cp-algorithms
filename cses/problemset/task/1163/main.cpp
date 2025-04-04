@@ -8,7 +8,9 @@
 
 
 #include <iostream>
-#include <algorithm>
+#include <map>
+#include <set>
+// #include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -94,22 +96,39 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 
 // TODO: JUST CODE HERE
 void solver(){
-    int input(n); 
-    pair<int, int> arr[n];
+    int input(x, n); 
+    map<int, pair<int, int>> gap = {{0, {-1, x}}, {x, {x, -1}}};
+    set<pair<int, int>> lgap_sort = {{x, x}}; // not map because map can't store duplicates as its key is value of above one.
+    // set<pair<int, int>> rgap_sort = {{x, 0}}; // not map because map can't store duplicates as its key is value of above one.
+    // no need for rgap_sort as its keys are same as lgap_sort
     for (int i = 0; i < n; i++){
-        int num;
-        cin>>num;
-        arr[i] = {num, i};
+        int input(pi); // it is unique
+        auto it_greater = gap.upper_bound(pi);
+        // NOTE: i can't use x.lower_bound()-- but i can use --x.lower_bound() insted it_lower-- afterwards only if it is sure that it is not equal to begin...
+        auto it_lower = --gap.lower_bound(pi); // it_lower--; 
+        int lgap = pi - it_lower->first;
+        int rgap = it_greater->first - pi;
+        
+        lgap_sort.erase({(it_greater->second).first, it_greater->first});
+        // rgap_sort.erase({(it_lower->second).second, it_lower->first});
+        
+        (it_lower->second).second = lgap;
+        (it_greater->second).first = rgap;
+        // gap.insert({pi, {lgap, rgap}});
+        
+        lgap_sort.insert({rgap, it_greater->first});
+        lgap_sort.insert({lgap, pi});
+
+        // rgap_sort.insert({lgap, it_lower->first});
+        // rgap_sort.insert({rgap, pi});
+
+        // debug(gap);
+        debug(lgap_sort);
+        // debug(rgap_sort);
+        // cout<<utils::max((*(--lgap_sort.end())).first, (*(--rgap_sort.end())).first)<<' ';
+        cout<<(*(--lgap_sort.end())).first<<' ';
     }
-    sort(arr, arr+n); // NOTE: we can skip the sort as it is given that the num is between 1 to n so we can place arr[num-1] = {num, i} kindoff
-    debug(fmt::sprint_array(arr, n));
-    int last_pos = arr[0].second;
-    int ans = 1;
-    for (int i = 1; i < n; i++){
-        if (arr[i].second < last_pos) ans++;
-        last_pos = arr[i].second;
-    }
-    cout<<ans<<nl;
+    cout<<nl;
 }
 
 int main(){
@@ -139,14 +158,9 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("5", "4 2 1 5 3");
+        tin.set("8 3", "3 6 2");
         solver();
-        asserttout("3\n");
-    }
-    It(the question is not what i think){ // NOTE: question askes to collect from left to right but i did right to left
-        tin.set("5", "5 4 2 3 1");
-        solver();
-        asserttout("4\n");
+        asserttout("5 3 3 \n");
     }
 }
 #endif

@@ -8,7 +8,8 @@
 
 
 #include <iostream>
-#include <algorithm>
+// #include <algorithm>
+#include <map>
 using namespace std;
 
 // copy past it in run.bat
@@ -95,21 +96,26 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 // TODO: JUST CODE HERE
 void solver(){
     int input(n); 
-    pair<int, int> arr[n];
+    
+    map<int, int> k_top;
+    
     for (int i = 0; i < n; i++){
-        int num;
-        cin>>num;
-        arr[i] = {num, i};
+        int input(ki); 
+        auto it = k_top.upper_bound(ki); // upper_bound(ki) == lower_bound(ki+1) for natural numbers
+        if (it != k_top.end()){
+            if (it->second == 1)
+                k_top.erase(it->first);
+            else // NOTE: i forgot this case...
+                it->second--;
+        }
+        // k_top.insert({ki, true});
+        k_top[ki] ++;
+        debug(k_top);
     }
-    sort(arr, arr+n); // NOTE: we can skip the sort as it is given that the num is between 1 to n so we can place arr[num-1] = {num, i} kindoff
-    debug(fmt::sprint_array(arr, n));
-    int last_pos = arr[0].second;
-    int ans = 1;
-    for (int i = 1; i < n; i++){
-        if (arr[i].second < last_pos) ans++;
-        last_pos = arr[i].second;
-    }
+    int ans = 0;
+    for (const auto &k: k_top) ans += k.second;
     cout<<ans<<nl;
+    // cout<<k_top.size()<<nl;
 }
 
 int main(){
@@ -139,14 +145,42 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("5", "4 2 1 5 3");
+        tin.set("5", "3 8 2 1 5");
         solver();
-        asserttout("3\n");
+        asserttout("2\n");
     }
-    It(the question is not what i think){ // NOTE: question askes to collect from left to right but i did right to left
-        tin.set("5", "5 4 2 3 1");
+    It(sample test case){
+        tin.set("7", "1 7 8 5 11 13 17");
+        solver();
+        asserttout("6\n");
+    }
+    It(sample test case){
+        tin.set("7", "17 13 11 5 8 7 1");
+        solver();
+        asserttout("2\n");
+    }
+    It(failed case){
+        tin.set("10", "1 1 1 1 1 1 1 1 1 1");
+        solver();
+        asserttout("10\n");
+    }
+    It(failed again case){
+        tin.set("10", "1 2 3 4 5 8 7 1 9 1"); // wrong logic as we can place 1 at 2,,, right...
+        solver();
+        asserttout("7\n");
+    }
+    
+    It(failed again case){ // failed as the map don't have duplicates
+        tin.set("10", "10 4 5 9 4 10 2 7 4 6");
         solver();
         asserttout("4\n");
+    }
+    It(now why?){
+        It(failed again case){ // i have to fix the case in which it required multiple ki in the map
+            tin.set("4", "5 5 3 4");
+            solver();
+            asserttout("2\n");
+        }
     }
 }
 #endif

@@ -8,7 +8,9 @@
 
 
 #include <iostream>
-#include <algorithm>
+// #include <set>
+#include <map>
+// #include <algorithm>
 using namespace std;
 
 // copy past it in run.bat
@@ -95,19 +97,24 @@ inline void _input(Args&... args) {(std::cin >> ... >> args);} // output same co
 // TODO: JUST CODE HERE
 void solver(){
     int input(n); 
-    pair<int, int> arr[n];
+    int inputn(arr, n);
+
+    map<int, int> unique;
+    int ans = 0;
+    int curr_ans = 0;
     for (int i = 0; i < n; i++){
-        int num;
-        cin>>num;
-        arr[i] = {num, i};
-    }
-    sort(arr, arr+n); // NOTE: we can skip the sort as it is given that the num is between 1 to n so we can place arr[num-1] = {num, i} kindoff
-    debug(fmt::sprint_array(arr, n));
-    int last_pos = arr[0].second;
-    int ans = 1;
-    for (int i = 1; i < n; i++){
-        if (arr[i].second < last_pos) ans++;
-        last_pos = arr[i].second;
+        if (unique.count(arr[i])){ // if 1 (present)
+            int pos_duplicate = unique[arr[i]];
+            for (int j = i - curr_ans; j <= pos_duplicate; j++) unique.erase(arr[j]);
+            curr_ans = i - pos_duplicate;
+            unique[arr[i]] = i;
+        }else{
+            unique[arr[i]] = i;
+            curr_ans ++;
+            ans = utils::max(ans, curr_ans);
+        }
+        debug(curr_ans);
+        debug(unique);
     }
     cout<<ans<<nl;
 }
@@ -139,12 +146,27 @@ int main(){
 MAKE_TESTS{
     // you can use this if you want...
     It(sample test case){
-        tin.set("5", "4 2 1 5 3");
+        tin.set("8", "1 2 1 3 2 7 4 2");
         solver();
-        asserttout("3\n");
+        asserttout("5\n");
     }
-    It(the question is not what i think){ // NOTE: question askes to collect from left to right but i did right to left
-        tin.set("5", "5 4 2 3 1");
+    It(sample test case){
+        tin.set("6", "1 3 2 7 4 2");
+        solver();
+        asserttout("5\n");
+    }
+    It(failed case){
+        tin.set("10", "2 2 1 1 2 1 2 1 2 1");
+        solver();
+        asserttout("2\n");
+    }
+    It(failed case){
+        tin.set("10", "1 1 1 1 1 1 1 1 1 1");
+        solver();
+        asserttout("1\n");
+    }
+    It(failed case){
+        tin.set("9", "1 2 2 3 4 3 4 2 1");
         solver();
         asserttout("4\n");
     }
