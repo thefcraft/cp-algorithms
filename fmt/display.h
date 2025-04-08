@@ -150,7 +150,7 @@ namespace fmt {
             void *data;
             unsigned long long data_size;
 
-            fmtout(void * data = nullptr, unsigned long long data_size = 0): data(data), data_size(data_size) {}
+            fmtout(void *data = nullptr, unsigned long long data_size = 0): data(data), data_size(data_size) {}
             
             // Overloaded operator<< to handle output
             template<typename T>
