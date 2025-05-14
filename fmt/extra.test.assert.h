@@ -1,3 +1,6 @@
+// Copyright (c) 2025, ThefCraft
+// License: This project is licensed under the MIT License.
+
 // test::assert.h
 #ifndef TEST_ASSERT_H
 #define TEST_ASSERT_H
